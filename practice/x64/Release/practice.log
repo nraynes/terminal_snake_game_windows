@@ -1,0 +1,9 @@
+﻿  Source.cpp
+  Snake.cpp
+  Field.cpp
+  Score.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 87 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  practice.vcxproj -> C:\Users\nicho\source\repos\practice\x64\Release\practice.exe
