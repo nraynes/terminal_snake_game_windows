@@ -1,4 +1,5 @@
 #include <iostream>
+#include <future>
 #include <stdlib.h>
 #include <Windows.h>
 #include "Field.cpp"
@@ -9,25 +10,20 @@ int main() {
 	Field container;
 	bool ateFood = false;
 	char direction = 'A';
+	bool stopInputController = false;
+	std::future<void> inputControllerObj = std::async(inputController, std::ref(direction), std::ref(stopInputController));
 	while (true) {
-		if (GetKeyState('D') & 0x8000) {
-			direction = 'A';
-		} else if (GetKeyState('S') & 0x8000) {
-			direction = 'B';
-		} else if (GetKeyState('A') & 0x8000) {
-			direction = 'C';
-		} else if (GetKeyState('W') & 0x8000) {
-			direction = 'D';
-		}
 		bool collided = player.update(direction, ateFood);
 		if (ateFood) {
 			ateFood = false;
 		}
 		if (collided) {
+			stopInputController = true;
 			break;
 		} else {
 			collided = container.render(player, ateFood);
 			if (collided) {
+				stopInputController = true;
 				break;
 			}
 		}
@@ -36,5 +32,11 @@ int main() {
 	system("CLS");
 	size_t currentSize = player.size();
 	displayScore(currentSize);
-	std::cin.get();
+	inputControllerObj.get();
+	bool endGame = false;
+	while (!endGame) {
+		if (GetKeyState(VK_ESCAPE) & 0x8000) {
+			endGame = true;
+		}
+	}
 }

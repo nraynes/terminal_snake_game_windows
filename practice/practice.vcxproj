@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="Field.cpp" />
