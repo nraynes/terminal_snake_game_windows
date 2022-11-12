@@ -1,30 +1,32 @@
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
+#include <string>
 #include "Snake.cpp"
-
+#include "declarations.h"
 
 class Field
 {
 private:
-	char matrix[22][22];
+	char matrix[22][42];
 	int foodOnPlate = 0;
 
 public:
+
 	bool render(Snake& player, bool& ateFood) {
-		system("CLS");
+		// 10% chance to add food to the field if not at max.
 		bool addFood = rand() % 100 + 1 < 10 && foodOnPlate < 5;
 		int food_x = -1;
 		int food_y = -1;
 		if (addFood) {
-			food_x = rand() % 20;
+			food_x = rand() % 40;
 			food_y = rand() % 20;
 		}
 		for (int i = 0; i < player.size(); i++) {
 			char displayCharacter = '|';
 			SnakeNode currentNode = player.getNode(i);
 			// Detect collisions.
-			if (currentNode.x < 0 || currentNode.x > 20 || currentNode.y < 0 || currentNode.y > 20) {
+			if (currentNode.x < 0 || currentNode.x > 40 || currentNode.y < 0 || currentNode.y > 20) {
 				return true;
 			}
 			// Check if food was eaten.
@@ -47,23 +49,28 @@ public:
 			}
 			matrix[currentNode.y][currentNode.x] = displayCharacter;
 		}
-		// 10% chance to add more food to the field if the max hasn't been reached
 		if (addFood) {
 			matrix[food_y][food_x] = 'O';
 			foodOnPlate++;
 		}
-		// Display current field.
+
+		// Build the field.
+		std::string playingField;
 		for (int i = 0; i < 22; i++) {
-			for (int j = 0; j < 22; j++) {
+			for (int j = 0; j < 42; j++) {
 				if (matrix[i][j] != '|' && matrix[i][j] != '-' && matrix[i][j] != 'O') {
-					matrix[i][j] = i == 21 || j == 21 ? '+' : ' ';
+					matrix[i][j] = i == 21 || j == 41 ? '+' : ' ';
 				}
-				std::cout << matrix[i][j];
+				playingField += matrix[i][j];
 				if (matrix[i][j] != 'O')
 					matrix[i][j] = ' ';
 			}
-			std::cout << "\n";
+			playingField += "\n";
 		}
+
+		// Clear the screen and display the current field.
+		clearscreen();
+		std::cout << playingField;
 		return false;
 	}
 };

@@ -1,5 +1,6 @@
-﻿  Controller.cpp
-  Source.cpp
+﻿  Clear.cpp
+  Controller.cpp
   Field.cpp
+  Source.cpp
   Generating Code...
   practice.vcxproj -> C:\Users\nicho\source\repos\practice\x64\Debug\practice.exe

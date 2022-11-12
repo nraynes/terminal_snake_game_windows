@@ -11,7 +11,11 @@ int main() {
 	bool ateFood = false;
 	char direction = 'A';
 	bool stopInputController = false;
+
+	// Start the input controller to watch for key presses.
 	std::future<void> inputControllerObj = std::async(inputController, std::ref(direction), std::ref(stopInputController));
+
+	// Start the game loop.
 	while (true) {
 		bool collided = player.update(direction, ateFood);
 		if (ateFood) {
@@ -29,8 +33,10 @@ int main() {
 		}
 		Sleep(200);
 	}
-	system("CLS");
+
+	// Display score at end of game, stop the input controller, and wait for the escape key to be pressed to close game.
 	size_t currentSize = player.size();
+	clearscreen();
 	displayScore(currentSize);
 	inputControllerObj.get();
 	bool endGame = false;
