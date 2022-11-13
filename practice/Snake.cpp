@@ -1,38 +1,31 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
-/*
-	Directions:
-	A = right
-	B = down
-	C = left
-	D = right
-*/
+#include "Declarations.h"
 
 struct SnakeNode {
-	int x, y;
-	char direction;
+	short x, y;
+	Direction direction;
 
-	SnakeNode(int i_x = 0, int i_y = 0, char i_direction = 'A') : x(i_x), y(i_y), direction(i_direction) {}
+	SnakeNode(short i_x = 0, short i_y = 0, Direction i_direction = Direction::RIGHT) : x(i_x), y(i_y), direction(i_direction) {}
 };
 
 class Snake {
 	private:
 		std::vector<SnakeNode> nodes;
 
-		char oppositeDirection(char& direction) {
+		Direction oppositeDirection(Direction& direction) {
 			switch (direction) {
-				case 'A':
-					return 'C';
-				case 'B':
-					return 'D';
-				case 'C':
-					return 'A';
-				case 'D':
-					return 'B';
+				case Direction::RIGHT:
+					return Direction::LEFT;
+				case Direction::DOWN:
+					return Direction::UP;
+				case Direction::LEFT:
+					return Direction::RIGHT;
+				case Direction::UP:
+					return Direction::DOWN;
 				default:
-					return 'U';
+					return Direction::RIGHT;
 			}
 		}
 
@@ -50,28 +43,28 @@ class Snake {
 			return nodes.size();
 		}
 
-		SnakeNode getNode(int index) {
+		SnakeNode getNode(short index) {
 			return nodes[index];
 		}
 
-		bool update(char& command, bool& ateFood) {
+		bool update(Direction& command, bool& ateFood) {
 			// Add a new node to end of snake if food was eaten.
 			if (ateFood) {
 				SnakeNode& lastNode = nodes[nodes.size() - 1];
-				int n_x = lastNode.x;
-				int n_y = lastNode.y;
-				char n_direction = lastNode.direction;
+				short n_x = lastNode.x;
+				short n_y = lastNode.y;
+				Direction n_direction = lastNode.direction;
 				switch (n_direction) {
-					case 'A':
+					case Direction::RIGHT:
 						n_x--;
 						break;
-					case 'B':
+					case Direction::DOWN:
 						n_y--;
 						break;
-					case 'C':
+					case Direction::LEFT:
 						n_x++;
 						break;
-					case 'D':
+					case Direction::UP:
 						n_y++;
 						break;
 					default:
@@ -82,35 +75,35 @@ class Snake {
 			}
 			// change the direction of the head node to the command if issues.
 			SnakeNode& headNode = nodes[0];
-			if (command == 'U' || command == oppositeDirection(headNode.direction)) {
+			if (command == oppositeDirection(headNode.direction)) {
 				command = headNode.direction;
 			} else {
 				headNode.direction = command;
 			}
 			// Update all the node coordinates and directions to move the snake.
-			char prevDirection = nodes[0].direction;
+			Direction prevDirection = nodes[0].direction;
 			bool collisionDetected = false;
-			for (int i = 0; i < nodes.size(); i++) {
+			for (short i = 0; i < nodes.size(); i++) {
 				SnakeNode& currentNode = nodes[i];
 				// Change position.
 				switch (currentNode.direction) {
-					case 'A':
+					case Direction::RIGHT:
 						currentNode.x++;
 						break;
-					case 'B':
+					case Direction::DOWN:
 						currentNode.y++;
 						break;
-					case 'C':
+					case Direction::LEFT:
 						currentNode.x--;
 						break;
-					case 'D':
+					case Direction::UP:
 						currentNode.y--;
 						break;
 					default:
 						break;
 				}
 				// Change Direction.
-				char temp = currentNode.direction;
+				Direction temp = currentNode.direction;
 				currentNode.direction = prevDirection;
 				prevDirection = temp;
 				// Check for collision.
@@ -121,29 +114,5 @@ class Snake {
 				}
 			}
 			return collisionDetected;
-		}
-
-		void display() {
-			std::string nodeDirection;
-			for (int i = 0; i < nodes.size(); i++) {
-				switch (nodes[i].direction) {
-					case 'A':
-						nodeDirection = "Right";
-						break;
-					case 'B':
-						nodeDirection = "Down";
-						break;
-					case 'C':
-						nodeDirection = "Left";
-						break;
-					case 'D':
-						nodeDirection = "Up";
-						break;
-					default:
-						break;
-				}
-				std::cout << "Node " << i + 1 << (i == 0 ? " (HEAD)" : i == nodes.size() - 1 ? " (TAIL)" : "") << ": { " << nodes[i].x << ", " << nodes[i].y << ", " << nodeDirection << " }\n";
-			}
-			std::cout << "\n";
 		}
 };

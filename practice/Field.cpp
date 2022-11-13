@@ -3,26 +3,26 @@
 #include <vector>
 #include <string>
 #include "Snake.cpp"
-#include "declarations.h"
+#include "Declarations.h"
 
 class Field
 {
 private:
 	char matrix[22][42];
-	int foodOnPlate = 0;
+	short foodOnPlate = 0;
 
 public:
 
 	bool render(Snake& player, bool& ateFood) {
 		// 10% chance to add food to the field if not at max.
 		bool addFood = rand() % 100 + 1 < 10 && foodOnPlate < 5;
-		int food_x = -1;
-		int food_y = -1;
+		short food_x = -1;
+		short food_y = -1;
 		if (addFood) {
 			food_x = rand() % 40;
 			food_y = rand() % 20;
 		}
-		for (int i = 0; i < player.size(); i++) {
+		for (short i = 0; i < player.size(); i++) {
 			char displayCharacter = '|';
 			SnakeNode currentNode = player.getNode(i);
 			// Detect collisions.
@@ -40,12 +40,9 @@ public:
 				}
 			}
 			switch (currentNode.direction) {
-				case 'A':
-				case 'C':
+				case Direction::RIGHT:
+				case Direction::LEFT:
 					displayCharacter = '-';
-					break;
-				default:
-					break;
 			}
 			matrix[currentNode.y][currentNode.x] = displayCharacter;
 		}
@@ -56,8 +53,8 @@ public:
 
 		// Build the field.
 		std::string playingField;
-		for (int i = 0; i < 22; i++) {
-			for (int j = 0; j < 42; j++) {
+		for (short i = 0; i < 22; i++) {
+			for (short j = 0; j < 42; j++) {
 				if (matrix[i][j] != '|' && matrix[i][j] != '-' && matrix[i][j] != 'O') {
 					matrix[i][j] = i == 21 || j == 41 ? '+' : ' ';
 				}

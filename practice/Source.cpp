@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <Windows.h>
 #include "Field.cpp"
-#include "declarations.h"
+#include "Declarations.h"
 
 int main() {
+	hideCursor();
+
 	Snake player;
 	Field container;
 	bool ateFood = false;
-	char direction = 'A';
+	Direction direction = Direction::RIGHT;
 	bool stopInputController = false;
 
 	// Start the input controller to watch for key presses.
